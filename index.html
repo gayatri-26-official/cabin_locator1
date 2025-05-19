@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Cabin Locator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4cc9f0;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4caf50;
+            --warning-color: #ff9800;
+            --danger-color: #f44336;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--dark-color);
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        header {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .search-container {
+            padding: 1.5rem 2rem;
+            background-color: white;
+            position: relative;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--light-color);
+            border-radius: 50px;
+            padding: 0.5rem 1rem;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .search-box:focus-within {
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-box i {
+            color: var(--primary-color);
+            margin-right: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        #search {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 0.8rem 0;
+            font-size: 1rem;
+            outline: none;
+            color: var(--dark-color);
+        }
+
+        #search::placeholder {
+            color: #adb5bd;
+        }
+
+        #results {
+            max-height: 500px;
+            overflow-y: auto;
+            padding: 0 2rem 2rem;
+        }
+
+        .teacher {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            animation: slideIn 0.3s ease-out forwards;
+            opacity: 0;
+            transform: translateX(-10px);
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .teacher:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-info {
+            display: flex;
+            align-items: center;
+        }
+
+        .teacher-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
+        .teacher-name {
+            font-weight: 500;
+        }
+
+        .teacher-title {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 0.2rem;
+        }
+
+        .cabin {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 5px rgba(76, 201, 240, 0.3);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 2rem;
+            color: #6c757d;
+        }
+
+        .no-results i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            padding: 1rem 2rem;
+            background-color: var(--light-color);
+            border-top: 1px solid #e9ecef;
+            font-size: 0.9rem;
+            color: #6c757d;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            header {
+                padding: 1.5rem;
+            }
+            
+            header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .search-container {
+                padding: 1rem;
+            }
+            
+            #results {
+                padding: 0 1rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-chalkboard-teacher"></i> Teacher Cabin Locator</h1>
+            <p>Find your teacher's cabin location in seconds</p>
+        </header>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search" placeholder="Search for a teacher by name...">
+            </div>
+        </div>
+        
+        <div id="results"></div>
+        
+        <div class="stats">
+            <div class="total-teachers">Total Teachers: <span id="total-count">0</span></div>
+            <div class="matches">Matches: <span id="match-count">0</span></div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2023 College Cabin Locator | Designed with <i class="fas fa-heart" style="color: #e63946;"></i></p>
+    </footer>
+
+    <script>
+        // Teacher data
+        const teachers = {
+            "Dr Jithina Jose": "H-204(A)",
+            "Mrs. Sapana Kolambe": "H-204(A)",
+            "Kunal Pawar": "H-204(A)",
+            "Vijay Kumar Mantri": "H-204(A)",
+            "Arati Despande": "H-204B",
+            "Tukaram Kendre": "H-204B",
+            "Pankaj Design": "e302",
+            "Dr Pramod D. Ganjewar": "H206",
+            "Dr Sandeep D. Pande": "H206",
+            "Mr. Nilesh D. Navghare": "H206",
+            "Mr. Santosh Warpe": "H206",
+            "Ms. Bhagyashree Alhat": "H206",
+            "Mrs. Prajakta Ugale": "H206",
+            "Mrs. Shubhangi Kale": "H206",
+            "Mrs. Kavitha S.": "H206",
+            "Dr. Minakshi Vharkate": "H206",
+            "Mrs. Kanchan Dhote": "H206",
+            "Mrs. Mayura Kulkarni": "H206",
+            "Mrs Madhavi Nimkar": "H207A",
+            "Mrs Jayashree Yadannavar": "H207A",
+            "Vinodini Gupta": "H207A",
+            "Mrs. Priyanka Mane": "H210",
+            "Mrs. Diptee Ghusse": "H210",
+            "Ms Padma Nimbhore": "H210",
+            "Dr. Rahul Adhao": "H210",
+            "Ms. Pranali Lokhande": "H210",
+            "Mrs. Anita Shingade": "H210",
+            "Mrs. Laxmi Kale": "H210",
+            "Dr Rajeshwari Goudar": "H211",
+            "Mrs. Pushpmala V. Shinde": "H201",
+            "Dr Shital Kumar Jain": "H201",
+            "Mrs. Jaya Mane": "H201",
+            "Mrs. Chetana Nemade": "H201",
+            "Ms. Sharmila Kharat": "H201",
+            "Dr. Sunita Barve": "H201",
+            "Ms. Neha Hajare": "H201",
+            "Venkatesh Karad": "HBM-02",
+            "Snehal Wagh": "HBM01",
+            "Dr. Swapnil Patare": "HBM01",
+            "Anagh Galagali": "HBM01",
+            "Shalaka Hire": "HBM01",
+            "S D Botre": "HBM-07",
+            "Shyam Shukla": "HBM-08",
+            "Ramesh Ghuge": "HBM-08",
+            "Sitaram Suryawanshi": "HBM-09",
+            "Bhaskar Wabhitkar": "HBM-09",
+            "Khushal Kanade": "HBM-09",
+            "Swapnali Kanade": "HBM-09",
+            "Vijay Muthekar": "HBM-09",
+            "Yogesh Abhang": "HBM13",
+            "Sagar Mushan": "D003",
+            "Mrs Sini Ronson": "D003",
+            "Mrs Asha Abhilash": "D003",
+            "Shaif Hussain": "D003",
+            "Puja Verma": "D003",
+            "Manisha Pansare": "D003",
+            "Satish Gajbhiv": "D003",
+            "Azhar Shaikh": "D003",
+            "Dilip Panchal": "Examination Section",
+            "Arika Kotha": "Examination Section",
+            "Vaishali Wangikar": "D-002",
+            "Nandini Phulpagar": "D-002",
+            "Usha Verma": "D-002",
+            "Shridhar Khandekar": "D-306",
+            "Abhishek Patil": "D-301A",
+            "Ajit Tapkir": "D-301A",
+            "Vishwas Sawant": "D-302A",
+            "Satish Kabra": "D-204",
+            "Omkesh Karad": "PHYSICS LAB",
+            "Parnavi Sankhla": "PHYSICS LAB",
+            "Mr. Atul Patil": "Library",
+            "Rajashri Kakitkar": "Library",
+            "Sunanda Phulari": "Library",
+            "Sanjay Dahiwarkar": "Library",
+            "Shital Kharat": "H-006",
+            "Abhijeet Malge": "H-006",
+            "Muniyappan N": "H001A",
+            "Vishal Bhosale": "H005",
+            "Amol Asalekar": "H005",
+            "Prashant Jikar": "H005",
+            "Archana Mane": "H012",
+            "Renu Shastri": "H012",
+            "Mayuri Pokharna": "H007",
+            "Pritam Kalos": "H007",
+            "Vinayak Bhosale": "H007",
+            "Maya Charde": "H009",
+            "Ankit R Nagargoje": "H103",
+            "Nitasha B Chaudhari": "H103",
+            "Bhimgoud Patil": "H102",
+            "Shreekant Patil": "H102",
+            "Prashant Barve": "H106",
+            "Nilesh Totla": "H112",
+            "Mahesh Joshi": "H112",
+            "Sudesh Powar": "H112",
+            "Venugopal Kulkarni": "H112",
+            "A.G Kamble": "H107B",
+            "Amol Kolhe": "H108",
+            "Yogesh Maske": "H108",
+            "Sanjay Arsole": "H304Ab",
+            "Prajakta Ugale": "H304Ab",
+            "Pramod Dharmadhikari": "H305",
+            "Sandeep Shirvale": "H305",
+            "Navnath Kale": "H305",
+            "Pranav Shriram": "H305",
+            "Avinash Kulkarni": "H306D",
+            "Kanchan Dhote": "H306D",
+            "Chaitanya Patil": "H311",
+            "Chaitanya Bhosale": "H311",
+            "Vaibhav Rewaskar": "H311",
+            "Amar More": "H311",
+            "Manish Giri": "H311",
+            "Vijay Kumar Mantri": "H310",
+            "Avinash Kulkarni": "H310",
+            "Laxmi Kale": "H306B",
+            "Suraj Kunjir": "H306B",
+            "Sandeep Shevale": "A001",
+            "Suyogkumar Taralkar": "A001",
+            "Sudhir Gandhi": "A001",
+            "Vijaykumar Tarange": "A001",
+            "Dilip Chavan": "A002",
+            "Parag Sutar": "A002",
+            "Mayurkumar Patil": "A002",
+            "Ashwathy M.A.": "A003",
+            "Ashitosh Chavan": "A003",
+            "Vaishali Katkar": "A003",
+            "Vaibhav Gijare": "A003",
+            "Amol Kapse": "A005",
+            "Sunil Dewalkar": "A005",
+            "PR Kulkarni": "A008",
+            "Savita Pawar": "A012",
+            "Gajanan Vyavhare": "A012",
+            "Dattatraya Jagdale": "A012",
+            "Vrushal Waghmare": "A012",
+            "Kalpana Pawse": "A012",
+            "Vivekananda Joshi": "A014",
+            "Ashutosh Chavan": "A014"
+        };
+
+        // DOM elements
+        const searchInput = document.getElementById('search');
+        const resultsDiv = document.getElementById('results');
+        const totalCountEl = document.getElementById('total-count');
+        const matchCountEl = document.getElementById('match-count');
+
+        // Initialize
+        totalCountEl.textContent = Object.keys(teachers).length;
+        matchCountEl.textContent = '0';
+
+        // Search functionality
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase().trim();
+            resultsDiv.innerHTML = '';
+
+            if (searchTerm.length === 0) {
+                matchCountEl.textContent = '0';
+                return;
+            }
+
+            const matches = Object.keys(teachers).filter(name => 
+                name.toLowerCase().includes(searchTerm)
+            );
+
+            matchCountEl.textContent = matches.length;
+
+            if (matches.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-user-slash"></i>
+                        <p>No teachers found matching "${searchTerm}"</p>
+                    </div>
+                `;
+                return;
+            }
+
+            matches.forEach((name, index) => {
+                const div = document.createElement('div');
+                div.className = 'teacher';
+                div.style.animationDelay = `${index * 0.05}s`;
+                
+                // Get initials for avatar
+                const initials = name.split(' ').map(n => n[0]).join('').toUpperCase();
+                
+                div.innerHTML = `
+                    <div class="teacher-info">
+                        <div class="teacher-avatar">${initials}</div>
+                        <div>
+                            <div class="teacher-name">${name}</div>
+                            <div class="teacher-title">${name.startsWith('Dr') ? 'Professor' : name.startsWith('Mr') ? 'Teacher' : name.startsWith('Mrs') ? 'Teacher' : 'Staff'}</div>
+                        </div>
+                    </div>
+                    <div class="cabin">${teachers[name]}</div>
+                `;
+                resultsDiv.appendChild(div);
+            });
+        });
+
+        // Focus search input on page load
+        window.addEventListener('load', () => {
+            searchInput.focus();
+        });
+    </script>
+</body>
+</html>
